@@ -1,0 +1,19 @@
+{
+  "name": "bnjs-mj-n-145",
+  "version": "1.0.0",
+  "description": "Repo oficial del curso Desarrollo Backend con Node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eant/BNJS-MJ-N-145.git"
+  },
+  "author": "smessina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eant/BNJS-MJ-N-145/issues"
+  },
+  "homepage": "https://github.com/eant/BNJS-MJ-N-145#readme"
+}
