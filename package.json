@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/eant/BNJS-MJ-N-145#readme",
   "dependencies": {
-    "http": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "nodemon": "^2.0.6"
   }
 }
