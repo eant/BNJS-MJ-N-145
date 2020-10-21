@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/eant/BNJS-MJ-N-145/issues"
   },
-  "homepage": "https://github.com/eant/BNJS-MJ-N-145#readme"
+  "homepage": "https://github.com/eant/BNJS-MJ-N-145#readme",
+  "dependencies": {
+    "http": "0.0.1-security"
+  }
 }
