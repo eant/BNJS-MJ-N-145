@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Formulario HTML</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	</head>
+	<body class="container">
+		<h1>Formulario HTML</h1>
+		<form action="enviar" method="post">
+
+			<label for="nombre">Ingrese su nombre:</label>
+			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan Kenobi">
+			
+			<br>
+
+			<label for="correo">Ingrese su E-Mail:</label>
+			<input class="form-control" type="email" name="correo" placeholder="Ej: obi.juan@jedi.com">
+
+			<br>
+
+			<label for="asunto">Elija su asunto:</label>
+			<select class="form-control" name="asunto">
+				<option value="1">Consulta</option>
+				<option value="2">Pedido</option>
+				<option value="3">Sugerencia</option>
+				<option value="4">Reclamo</option>
+			</select>
+
+			<br>
+
+			<label for="mensaje">Ingrese su mensaje:</label>
+			<textarea class="form-control" name="mensaje" cols="30" rows="10" placeholder="Max: 100 caracteres"></textarea>
+
+			<br>
+
+			<input class="btn btn-primary" type="submit" value="Done!">
+
+		</form>
+	</body>
+</html>
