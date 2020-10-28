@@ -10,17 +10,17 @@
 		<form action="enviar" method="post">
 
 			<label for="nombre">Ingrese su nombre:</label>
-			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan Kenobi">
+			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan Kenobi" required>
 			
 			<br>
 
 			<label for="correo">Ingrese su E-Mail:</label>
-			<input class="form-control" type="email" name="correo" placeholder="Ej: obi.juan@jedi.com">
+			<input class="form-control" type="email" name="correo" placeholder="Ej: obi.juan@jedi.com" required>
 
 			<br>
 
 			<label for="asunto">Elija su asunto:</label>
-			<select class="form-control" name="asunto">
+			<select class="form-control" name="asunto" required>
 				<option value="1">Consulta</option>
 				<option value="2">Pedido</option>
 				<option value="3">Sugerencia</option>
@@ -30,11 +30,11 @@
 			<br>
 
 			<label for="mensaje">Ingrese su mensaje:</label>
-			<textarea class="form-control" name="mensaje" cols="30" rows="10" placeholder="Max: 100 caracteres"></textarea>
+			<textarea class="form-control" name="mensaje" cols="30" rows="10" placeholder="Max: 100 caracteres" required></textarea>
 
 			<br>
 
-			<input class="btn btn-primary" type="submit" value="Done!">
+			<input class="btn btn-primary" type="submit" value="Enviar!">
 
 		</form>
 	</body>
