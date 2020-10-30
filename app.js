@@ -1,6 +1,7 @@
 const express = require("express")
 const nodemailer = require("nodemailer")
 const joi = require('joi')
+const expressFileUpload = require('express-fileupload')
 
 const app = express()
 
@@ -23,8 +24,11 @@ const schema = joi.object({
 })
 
 app.listen(port)
+// Middlewares //
 app.use( express.static('public') )
-app.use( express.urlencoded({ extended : true }) )
+app.use( express.json() ) //<- de "application/json" a Object
+app.use( express.urlencoded({ extended : true }) ) //<- de "application/x-www-form-urlencoded" a Object
+app.use( expressFileUpload() ) //<- de "multipart/form-data" a Object + File
 
 /*
 // Plantilla modelo para "endpoints" de express() //
@@ -34,15 +38,35 @@ app.TIPO_HTTP("/RUTA", (req, res) => {
 */
 app.post("/enviar", (req, res) => {
     const contacto = req.body
+    const { archivo } = req.files
+    
+    console.log(req.files)
 
-    // if( contacto.nombre == null || contacto.nombre == "" || contacto.nombre == undefined || contacto.nombre.length < 10 ){
-    //     console.log("ERRRRORRRR!!!!")
-    // }
+    const ubicacion = __dirname + "/public/uploads/" + archivo.name
 
-    const validate = schema.validate( contacto )
+    console.log("Se va a guardar en:")
+    console.log(ubicacion)
 
-    if( validate.error ){
-        res.end(error)
+    archivo.mv(ubicacion, error => {
+        if(error){
+            console.log("No se movio")
+        }
+    })
+
+    return res.end("Mira la consola...")
+
+    const { error, value } = schema.validate( contacto )
+
+    if( error ){
+        console.log(error)
+
+        const msg = {
+            error : error.details.map( e => {
+                console.log(e.message)
+            })
+        }
+
+        res.end( error.details[0].message )
     } else {
         miniOutlook.sendMail({
             from : contacto.correo, // sender address
