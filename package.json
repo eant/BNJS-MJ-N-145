@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "joi": "^17.3.0",
+    "mongodb": "^3.6.2",
     "nodemailer": "^6.4.14",
     "nodemon": "^2.0.6"
   }

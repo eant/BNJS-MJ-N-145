@@ -2,6 +2,7 @@ const express = require("express")
 const nodemailer = require("nodemailer")
 const joi = require('joi')
 const expressFileUpload = require('express-fileupload')
+const mongodb = require('mongodb').MongoClient
 
 const app = express()
 
@@ -79,3 +80,21 @@ app.post("/enviar", (req, res) => {
     }  
 
 })
+
+/** Create **/
+app.post("/api/pelicula", (req, res) => {
+    const respuesta = {
+        msg : "Acá vamos a crear peliculas..."
+    }
+    res.json(respuesta)
+})
+/** Read **/
+app.get("/api/pelicula", (req, res) => {
+    //db.getCollection('peliculas').find({})
+    const respuesta = {
+        msg : "Acá vamos a ver peliculas..."
+    }
+    res.json(respuesta)
+})
+/** Update **/
+/** Delete **/
