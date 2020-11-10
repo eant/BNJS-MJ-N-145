@@ -39,35 +39,32 @@ app.TIPO_HTTP("/RUTA", (req, res) => {
 */
 app.post("/enviar", (req, res) => {
     const contacto = req.body
+
+    // Captura de archivos enviados vía HTTP
+    /*  
     const { archivo } = req.files
     
-    console.log(req.files)
-
     const ubicacion = __dirname + "/public/uploads/" + archivo.name
 
-    console.log("Se va a guardar en:")
-    console.log(ubicacion)
-
     archivo.mv(ubicacion, error => {
-        if(error){
+        if( error ){
             console.log("No se movio")
         }
     })
 
     return res.end("Mira la consola...")
+    */
 
-    const { error, value } = schema.validate( contacto )
+    const { error, value } = schema.validate( contacto, { abortEarly : false } )
 
     if( error ){
-        console.log(error)
 
         const msg = {
-            error : error.details.map( e => {
-                console.log(e.message)
-            })
+            ok : false,
+            error : error.details.map( e => e.message.replace(/"/g, "") )
         }
 
-        res.end( error.details[0].message )
+        res.json( msg )
     } else {
         miniOutlook.sendMail({
             from : contacto.correo, // sender address
