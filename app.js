@@ -6,6 +6,8 @@ const mongodb = require('mongodb').MongoClient
 
 const app = express()
 
+const API = express.Router()
+
 const port = 1000   //mas allá del 1000 usualmente están disponibles
 
 const miniOutlook = nodemailer.createTransport({
@@ -31,6 +33,7 @@ app.use( express.json() ) //<- de "application/json" a Object
 app.use( express.urlencoded({ extended : true }) ) //<- de "application/x-www-form-urlencoded" a Object
 app.use( expressFileUpload() ) //<- de "multipart/form-data" a Object + File
 
+app.use("/api", API )
 /*
 // Plantilla modelo para "endpoints" de express() //
 app.TIPO_HTTP("/RUTA", (req, res) => {
@@ -78,15 +81,23 @@ app.post("/enviar", (req, res) => {
 
 })
 
+/******************************/
+/************ API ************/
 /** Create **/
-app.post("/api/pelicula", (req, res) => {
+API.post("/v1/pelicula", (req, res) => {
     const respuesta = {
         msg : "Acá vamos a crear peliculas..."
     }
     res.json(respuesta)
 })
+API.post("/v2/pelicula", (req, res) => {
+    const respuesta = {
+        msg : "Acá vamos a crear peliculas con más asado..."
+    }
+    res.json(respuesta)
+})
 /** Read **/
-app.get("/api/pelicula", (req, res) => {
+API.get("/v1/pelicula", (req, res) => {
     //db.getCollection('peliculas').find({})
     const respuesta = {
         msg : "Acá vamos a ver peliculas..."
@@ -94,4 +105,16 @@ app.get("/api/pelicula", (req, res) => {
     res.json(respuesta)
 })
 /** Update **/
+API.put("/v1/pelicula", (req, res) => {
+    const respuesta = {
+        msg : "Acá vamos a actualizar peliculas..."
+    }
+    res.json(respuesta)
+})
 /** Delete **/
+API.delete("/v1/peliculas", (req, res) => {
+    const respuesta = {
+        msg : "Acá vamos a borrar peliculas..."
+    }
+    res.json(respuesta)
+})
