@@ -2,20 +2,31 @@ const express = require("express")
 const nodemailer = require("nodemailer")
 const joi = require('joi')
 const expressFileUpload = require('express-fileupload')
-const mongodb = require('mongodb').MongoClient
+const { MongoClient } = require('mongodb')
 
 const app = express()
 
 const API = express.Router()
 
+const {
+    HOST_MAIL,
+    PUERTO_MAIL,
+    CASILLA_MAIL,
+    CLAVE_MAIL,
+    MONGODB_USER,
+    MONGODB_PASS,
+    MONGODB_HOST,
+    MONGODB_BASE
+ } = process.env
+
 const port = 1000   //mas allá del 1000 usualmente están disponibles
 
 const miniOutlook = nodemailer.createTransport({
-    host: process.env.HOST_MAIL,
-    port: process.env.PUERTO_MAIL,
+    host: HOST_MAIL,
+    port: PUERTO_MAIL,
     auth: {
-        user: process.env.CASILLA_MAIL,
-        pass: process.env.CLAVE_MAIL
+        user: CASILLA_MAIL,
+        pass: CLAVE_MAIL
     }
 })
 
@@ -25,6 +36,8 @@ const schema = joi.object({
     asunto : joi.number().integer().required(),
     mensaje : joi.string().required()
 })
+
+const ConnectionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/${MONGODB_BASE}?retryWrites=true&w=majority`
 
 app.listen(port)
 // Middlewares //
@@ -98,6 +111,9 @@ API.post("/v2/pelicula", (req, res) => {
 })
 /** Read **/
 API.get("/v1/pelicula", (req, res) => {
+
+    const client = MongoClient.connect(ConnectionString, { useUnifiedTopology : true })
+
     //db.getCollection('peliculas').find({})
     const respuesta = {
         msg : "Acá vamos a ver peliculas..."
