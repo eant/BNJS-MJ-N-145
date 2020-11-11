@@ -39,6 +39,12 @@ const schema = joi.object({
 
 const ConnectionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/${MONGODB_BASE}?retryWrites=true&w=majority`
 
+const ConnectionDB = async () => {
+    const client = await MongoClient.connect(ConnectionString, { useUnifiedTopology : true })
+
+    return await client.db('catalogo')
+}
+
 app.listen(port)
 // Middlewares //
 app.use( express.static('public') )
@@ -97,38 +103,37 @@ app.post("/enviar", (req, res) => {
 /******************************/
 /************ API ************/
 /** Create **/
-API.post("/v1/pelicula", (req, res) => {
+API.post("/v1/pelicula", async (req, res) => {
+    const db = await ConnectionDB()
+
     const respuesta = {
         msg : "Acá vamos a crear peliculas..."
     }
     res.json(respuesta)
 })
-API.post("/v2/pelicula", (req, res) => {
-    const respuesta = {
-        msg : "Acá vamos a crear peliculas con más asado..."
-    }
-    res.json(respuesta)
-})
+
 /** Read **/
 API.get("/v1/pelicula", async (req, res) => {
 
-    const client = await MongoClient.connect(ConnectionString, { useUnifiedTopology : true })
-
-    const db = await client.db('catalogo')
+    const db = await ConnectionDB()
 
     const peliculas = await db.collection('peliculas').find({}).toArray()
 
     res.json(peliculas)
 })
 /** Update **/
-API.put("/v1/pelicula", (req, res) => {
+API.put("/v1/pelicula", async (req, res) => {
+    const db = await ConnectionDB()
+
     const respuesta = {
         msg : "Acá vamos a actualizar peliculas..."
     }
     res.json(respuesta)
 })
 /** Delete **/
-API.delete("/v1/peliculas", (req, res) => {
+API.delete("/v1/peliculas", async (req, res) => {
+    const db = await ConnectionDB()
+
     const respuesta = {
         msg : "Acá vamos a borrar peliculas..."
     }
