@@ -2,7 +2,7 @@ const express = require("express")
 const nodemailer = require("nodemailer")
 const joi = require('joi')
 const expressFileUpload = require('express-fileupload')
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectId } = require('mongodb')
 
 const app = express()
 
@@ -60,7 +60,7 @@ app.TIPO_HTTP("/RUTA", (req, res) => {
 })
 */
 app.post("/enviar", (req, res) => {
-    const contacto = req.body
+    const contacto = req.body // <-- Datos desde HTTP Body
 
     // Captura de archivos enviados vía HTTP
     /*  
@@ -115,11 +115,37 @@ API.post("/v1/pelicula", async (req, res) => {
 /** Read **/
 API.get("/v1/pelicula", async (req, res) => {
 
+    //console.log( req.query.id ) // <-- Datos desde HTTP Query String
+
     const db = await ConnectionDB()
 
     const peliculas = await db.collection('peliculas').find({}).toArray()
 
     res.json(peliculas)
+})
+
+API.get("/v1/pelicula/:id", async (req, res) => {
+
+    const { id } = req.params
+
+    try {
+
+        const db = await ConnectionDB()
+
+        const peliculas = await db.collection('peliculas')
+    
+        const busqueda = { "_id" : ObjectId(id) }
+    
+        const resultado = await peliculas.find( busqueda ).toArray()
+
+        return res.json({ ok : true, resultado })
+
+    } catch(error){
+
+        return res.json({ ok : false, msg : "Pelicula no encontrada" })
+
+    }
+
 })
 /** Update **/
 API.put("/v1/pelicula", async (req, res) => {
