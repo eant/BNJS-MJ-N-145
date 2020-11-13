@@ -160,12 +160,33 @@ API.get("/v1/pelicula/:id", async (req, res) => {
 })
 
 /** Update **/
-API.put("/v1/pelicula", async (req, res) => {
+API.put("/v1/pelicula/:id", async (req, res) => {
+
+    const { id } = req.params
+    
+    const pelicula = req.body // <-- Ej: { titulo : "xxxx", estreno : 9999, genero : "zzzz" }
+
     const db = await ConnectionDB()
 
-    const respuesta = {
-        msg : "Acá vamos a actualizar peliculas..."
+    const peliculas = await db.collection('peliculas')
+
+    const busqueda = { "_id" : ObjectId(id) }
+
+    const nuevaData = {
+        $set : { // aca van las propiedades que voy a actualizar...
+            ...pelicula
+        }
     }
+
+    const { result } = await peliculas.updateOne(busqueda, nuevaData)
+
+    const { ok } = result
+
+    const respuesta = {
+        ok,
+        msg : ok ? "Pelicula actualizada correctamente" : "Error al actualizar la pelicula"
+    }
+
     res.json(respuesta)
 })
 /** Delete **/
