@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer")
 const joi = require('joi')
 const expressFileUpload = require('express-fileupload')
 const { MongoClient, ObjectId } = require('mongodb')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 
@@ -16,7 +17,8 @@ const {
     MONGODB_USER,
     MONGODB_PASS,
     MONGODB_HOST,
-    MONGODB_BASE
+    MONGODB_BASE,
+    JWT_SECRET
  } = process.env
 
 const port = 1000   //mas allá del 1000 usualmente están disponibles
@@ -102,6 +104,7 @@ app.post("/enviar", (req, res) => {
 
 /******************************/
 /************ API ************/
+
 /** Create **/
 API.post("/v1/pelicula", async (req, res) => {
 
@@ -189,6 +192,7 @@ API.put("/v1/pelicula/:id", async (req, res) => {
 
     res.json(respuesta)
 })
+
 /** Delete **/
 API.delete("/v1/peliculas", async (req, res) => {
     const db = await ConnectionDB()
@@ -197,4 +201,20 @@ API.delete("/v1/peliculas", async (req, res) => {
         msg : "Acá vamos a borrar peliculas..."
     }
     res.json(respuesta)
+})
+
+/* Auth */
+API.get("/v1/auth", (req, res) => {
+
+    //const token = jwt.sign(PAYLOAD, CONFIGS, SECRETKEY)
+    const email = "silvio.messina@eant.tech"
+    const name = "Silvio Messina"
+    const userID = "u2365781"
+
+    const token = jwt.sign({ email, name, userID, expiresIn : 60 * 60 }, JWT_SECRET)
+
+    console.log(token)
+
+    res.end("Acá hay que crear JWT")
+
 })
