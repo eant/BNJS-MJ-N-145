@@ -4,6 +4,7 @@ const joi = require('joi')
 const expressFileUpload = require('express-fileupload')
 const { MongoClient, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
@@ -47,12 +48,29 @@ const ConnectionDB = async () => {
     return await client.db('catalogo')
 }
 
+const verifyToken = (req, res, next) => {
+    const { _auth } = req.cookies
+
+    //jwt.verify(TOKEN, SECRET, CALLBACK)
+    jwt.verify(_auth, JWT_SECRET, (error, data) => {
+
+        if( error ){
+            res.end("ERROR: Token expirado o invalido...gato!")
+        } else {
+            next()
+        }
+
+    })
+}
+
 app.listen(port)
+
 // Middlewares //
 app.use( express.static('public') )
 app.use( express.json() ) //<- de "application/json" a Object
 app.use( express.urlencoded({ extended : true }) ) //<- de "application/x-www-form-urlencoded" a Object
 app.use( expressFileUpload() ) //<- de "multipart/form-data" a Object + File
+app.use( cookieParser() )
 
 app.use("/api", API )
 /*
@@ -127,7 +145,7 @@ API.post("/v1/pelicula", async (req, res) => {
 })
 
 /** Read **/
-API.get("/v1/pelicula", async (req, res) => {
+API.get("/v1/pelicula", verifyToken, async (req, res) => {
 
     //console.log( req.query.id ) // <-- Datos desde HTTP Query String
 
@@ -213,8 +231,13 @@ API.get("/v1/auth", (req, res) => {
 
     const token = jwt.sign({ email, name, userID, expiresIn : 60 * 60 }, JWT_SECRET)
 
-    console.log(token)
+    //res.cookie(NOMBRE, CONTENIDO, CONFIG)
+    res.cookie("_auth", token, {
+        expires : new Date( Date.now() + 1000 * 60 * 3 ),
+        httpOnly : true,
+        sameSite : 'Lax',
+        secure : false
+    })
 
-    res.end("Acá hay que crear JWT")
-
+    res.json({ auth : true })
 })
