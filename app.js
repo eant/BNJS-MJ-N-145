@@ -5,6 +5,7 @@ const expressFileUpload = require('express-fileupload')
 const { MongoClient, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt')
 
 const app = express()
 
@@ -222,22 +223,60 @@ API.delete("/v1/peliculas", async (req, res) => {
 })
 
 /* Auth */
-API.get("/v1/auth", (req, res) => {
+API.post("/v1/auth", (req, res) => {
 
-    //const token = jwt.sign(PAYLOAD, CONFIGS, SECRETKEY)
-    const email = "silvio.messina@eant.tech"
-    const name = "Silvio Messina"
-    const userID = "u2365781"
+    const { mail, pass } = req.body
 
-    const token = jwt.sign({ email, name, userID, expiresIn : 60 * 60 }, JWT_SECRET)
+    const userDB = {
+        "_id" : ObjectId("5fc6cee436eab07355414f83"),
+        "name" : "Han Nova Solo",
+        "mail" : "han.nova@solo.com",
+        "pass" : "$2b$10$lSGcO.CSXRri5LfS5TkTHO/zuEEaHFNMntxUsYzK.1NYQlq6Ikt9G"
+    }
+    
+    bcrypt.compare(pass, userDB.pass, (error, resultado) => {
 
-    //res.cookie(NOMBRE, CONTENIDO, CONFIG)
-    res.cookie("_auth", token, {
-        expires : new Date( Date.now() + 1000 * 60 * 3 ),
-        httpOnly : true,
-        sameSite : 'Lax',
-        secure : false
+        if( error ){
+
+            return res.json({ auth : false, msg : 'No pudimos verificar tu contraseña' })
+
+        } else if( resultado === false ){
+
+            return res.json({ auth : false, msg : 'La pass no coincide :(' })
+
+        } else {
+            //La pass coincide...
+            //const token = jwt.sign(PAYLOAD, CONFIGS, SECRETKEY)    
+            const token = jwt.sign({ email : userDB.mail, name : userDB.name, expiresIn : 60 * 60 }, JWT_SECRET)
+
+            //res.cookie(NOMBRE, CONTENIDO, CONFIG)
+            res.cookie("_auth", token, {
+                expires : new Date( Date.now() + 1000 * 60 * 3 ),
+                httpOnly : true,
+                sameSite : 'Lax',
+                secure : false
+            })
+
+            return res.json({ auth : true })
+        }
+    })  
+
+    //res.json(rta)
+})
+
+API.post('/v1/register', (req, res) => {
+    const { name, mail, pass } = req.body
+
+    bcrypt.hash(pass, 10, (error, hash) => {
+
+        if(error){
+            console.log('Como que la pass no se encripto, viteh!')
+        } else {
+            console.log("Tengo la password, viteh!")
+            console.log(hash)
+            //ACA HAY QUE GUARDAR EL USUARIO CON SU PASS EN LA BD
+        }
+
     })
-
-    res.json({ auth : true })
+    res.end('Mirad la consola...')
 })
