@@ -125,7 +125,7 @@ app.post("/enviar", (req, res) => {
 /************ API ************/
 
 /** Create **/
-API.post("/v1/pelicula", async (req, res) => {
+API.post("/v1/pelicula", verifyToken, async (req, res) => {
 
     const pelicula = req.body
 
@@ -146,7 +146,7 @@ API.post("/v1/pelicula", async (req, res) => {
 })
 
 /** Read **/
-API.get("/v1/pelicula", verifyToken, async (req, res) => {
+API.get("/v1/pelicula", async (req, res) => {
 
     //console.log( req.query.id ) // <-- Datos desde HTTP Query String
 
